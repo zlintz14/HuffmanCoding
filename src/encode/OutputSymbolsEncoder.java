@@ -15,6 +15,4 @@ public class OutputSymbolsEncoder implements Comparable<OutputSymbolsEncoder>{
 		return (int) sym - (int) o.sym;
 	}
 	
-	
-	
 }
