@@ -14,6 +14,7 @@ public class Node implements Comparable<Node> {
 		parent = null;
 		isFull = false;
 		isLeaf = false;
+		treeHeight = 0;
 		this.symbol = symbol;
 	}
 		
