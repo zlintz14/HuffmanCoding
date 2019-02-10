@@ -28,7 +28,7 @@ public class DecoderReaderAndWriter {
 	public DecoderReaderAndWriter() throws FileNotFoundException {
 		inSymbolsList = new ArrayList<InputSymbolsDecoder>();
 		asciiDecimalVal = 0;
-		in = new FileInputStream(System.getProperty("user.dir") + "/Data/encodedfile.dat");
+		in = new FileInputStream(System.getProperty("user.dir") + "/Data/encoded.dat");
 		inBitSource = new InputStreamBitSource(in);
 	}
 	
@@ -49,7 +49,7 @@ public class DecoderReaderAndWriter {
 	}
 	
 	public void decodeCompressedFileAndWriteOutput(Node root) throws IOException {
-		Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(Paths.get("").toAbsolutePath().toString() + "/Data/decodedfile.txt"), "utf-8"));
+		Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(Paths.get("").toAbsolutePath().toString() + "/Data/decoded.txt"), "utf-8"));
 		int remainingSyms = read4BytesAfterInital256();
 		for(int i = 0; i < remainingSyms; i++) {
 			Node n = root;
@@ -82,5 +82,6 @@ public class DecoderReaderAndWriter {
 		}
 		return Integer.parseInt(totalInBinary, 2);
 	}
+	
 	
 }

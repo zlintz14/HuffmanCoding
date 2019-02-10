@@ -4,6 +4,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
+import encode.EncoderReaderAndWriter;
+
 public class DecoderRunner {
 
 	public static void main(String[] args) throws RuntimeException, FileNotFoundException {
@@ -26,6 +28,14 @@ public class DecoderRunner {
 		
 		try {
 			readWrite.decodeCompressedFileAndWriteOutput(tree.root);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		//for calculating Entropy of Source Message
+		EncoderReaderAndWriter rW = new EncoderReaderAndWriter();
+		try {
+			rW.readSymbolsAndDetermineProbabilities();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
