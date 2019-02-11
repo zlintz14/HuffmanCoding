@@ -4,12 +4,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import decode.CanonicalHuffmanTree;
+import entropy.EntropyCalculator;
 
 public class EncoderRunner {
 	
 	public static void main(String[] args) throws RuntimeException, IOException {
 		EncoderReaderAndWriter readWrite = new EncoderReaderAndWriter();
-		readWrite.readSymbolsAndDetermineProbabilities();
+		EntropyCalculator entCalc = readWrite.readSymbolsAndDetermineProbabilities();
 				
 		MinVarianceHuffmanTree minVarianceTree = new MinVarianceHuffmanTree(readWrite.symsToProbability);
 		minVarianceTree.makeMinVarianceTree(null);
@@ -32,7 +33,7 @@ public class EncoderRunner {
 		List<OutputSymbolsEncoder> outSymsList = changeMinVarTreeSymsToOutputSyms(listOutEncode);
 		
 		try {
-			readWrite.encodeTextFileAndWriteOutput(canonicalTree.root, outSymsList, canonicalTree.symsEncodings);
+			readWrite.encodeTextFileAndWriteOutput(canonicalTree.root, outSymsList, canonicalTree.symsEncodings, entCalc);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

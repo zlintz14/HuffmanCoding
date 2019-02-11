@@ -43,10 +43,30 @@ public class CanonicalHuffmanTree {
 	}
 	
 	public void bfsCanonicalTreeAndGetEncodings(int treeHeight) {
+		
 		for(int i = 1; i <= treeHeight; i++) {
 			getSymbolEncodings(root, i, "");
 		}
 	}
+	
+	/* method is just for Decoder since it does not know its tree height like encoder does, 
+	 * but tree height is necessary for setting up variables for Entropy Calculations
+	 */
+	protected int findHeight(Node node)  
+    { 
+        if (node == null) 
+            return 0; 
+        else 
+        { 
+            int lDepth = findHeight(node.leftChild); 
+            int rDepth = findHeight(node.rightChild); 
+   
+            if (lDepth > rDepth) 
+                return (lDepth + 1); 
+             else 
+                return (rDepth + 1); 
+        } 
+    } 
 	
 	private void getSymbolEncodings(Node root, int level, String symEncoding) {
 		if(root == null) {

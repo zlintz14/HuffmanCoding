@@ -12,13 +12,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import decode.Node;
+import entropy.EntropyCalculator;
 import io.OutputStreamBitSink;
 
 public class EncoderReaderAndWriter {
 
 	private InputStream in;
 	private Map<Character, Integer> symsToOccurences;
-	protected List<Node> symsToProbability;
+	public List<Node> symsToProbability;
 	private List<Character> allSymsInFile;
 	private int totalNumSymsInFile;
 	
@@ -30,7 +31,7 @@ public class EncoderReaderAndWriter {
 		totalNumSymsInFile = 0;
 	}
 	
-	public void readSymbolsAndDetermineProbabilities() throws IOException {
+	public EntropyCalculator readSymbolsAndDetermineProbabilities() throws IOException {
 		try {
 			in = new FileInputStream(Paths.get("").toAbsolutePath().toString() + "/Data/decoded.txt");
 		} catch (Exception e) {
@@ -51,11 +52,11 @@ public class EncoderReaderAndWriter {
 			totalNumSymsInFile++;
 		}
 		
-		symbolsToProbabilities();
 		in.close();
+		return symbolsToProbabilities();
 	}
 	
-	public void encodeTextFileAndWriteOutput(Node root, List<OutputSymbolsEncoder> syms, Map<Character, String> symsToEncoding) throws IOException {
+	public void encodeTextFileAndWriteOutput(Node root, List<OutputSymbolsEncoder> syms, Map<Character, String> symsToEncoding, EntropyCalculator entCalc) throws IOException {
 		OutputStream out = new FileOutputStream(Paths.get("").toAbsolutePath().toString() + "/Data/encoded.dat");
 		OutputStreamBitSink outBitSink = new OutputStreamBitSink(out);
 		Collections.sort(syms);
@@ -75,12 +76,15 @@ public class EncoderReaderAndWriter {
 			outBitSink.write(symsToEncoding.get((char) symByte));
 		}
 		outBitSink.padToWord();
-		
+				
 		in.close();
 		out.close();
+		
+		entCalc.calculateTheoreticalEntropy();
+		entCalc.calculateCompressedFileEntropy(symsToEncoding);
 	}
 	
-	private void symbolsToProbabilities() {
+	public EntropyCalculator symbolsToProbabilities() {
 		int symsCount = 0;
 		Collections.sort(allSymsInFile);
 		for(int i = 0; i < 256; i++) {
@@ -99,22 +103,11 @@ public class EncoderReaderAndWriter {
 		}
 		
 		Collections.sort(symsToProbability);
-		calculateTheoreticalEntropyOfSourceMessage();
+		//initialize entCalc here to ensure correct list of probabilities is given since this list will be modified later
+		EntropyCalculator entCalc = new EntropyCalculator(symsToProbability);
+		
+		return entCalc;
 	}
 	
 	
-	private void calculateTheoreticalEntropyOfSourceMessage() {
-		double entropy = 0.0;
-		for(Node n: symsToProbability) {
-			double probability = n.symProbability;
-			if(probability != 0.0) {
-				entropy += probability * (log2(1 / probability));
-			}
-		}
-		System.out.println("The Entropy of the Source Message is: " + entropy + " bits per symbol");
-	}
-	
-	private double log2(double d) {
-	      return Math.log(d)/Math.log(2.0);
-	}
 }

@@ -1,14 +1,14 @@
 package decode;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
 import encode.EncoderReaderAndWriter;
+import entropy.EntropyCalculator;
 
 public class DecoderRunner {
 
-	public static void main(String[] args) throws RuntimeException, FileNotFoundException {
+	public static void main(String[] args) throws RuntimeException, IOException {
 		DecoderReaderAndWriter readWrite = new DecoderReaderAndWriter();
 		try {
 			readWrite.readAndSortFile();
@@ -33,9 +33,12 @@ public class DecoderRunner {
 		}
 		
 		//for calculating Entropy of Source Message
+		tree.bfsCanonicalTreeAndGetEncodings(tree.findHeight(tree.root));
 		EncoderReaderAndWriter rW = new EncoderReaderAndWriter();
 		try {
-			rW.readSymbolsAndDetermineProbabilities();
+			EntropyCalculator entCalc = rW.readSymbolsAndDetermineProbabilities();
+			entCalc.calculateTheoreticalEntropy();
+			entCalc.calculateCompressedFileEntropy(tree.symsEncodings);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

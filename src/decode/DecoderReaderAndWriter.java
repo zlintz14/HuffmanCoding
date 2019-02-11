@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.io.FileOutputStream;
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.file.Paths;
@@ -25,7 +24,7 @@ public class DecoderReaderAndWriter {
 	private InputStreamBitSource inBitSource;
 	
 	
-	public DecoderReaderAndWriter() throws FileNotFoundException {
+	public DecoderReaderAndWriter() throws IOException {
 		inSymbolsList = new ArrayList<InputSymbolsDecoder>();
 		asciiDecimalVal = 0;
 		in = new FileInputStream(System.getProperty("user.dir") + "/Data/encoded.dat");

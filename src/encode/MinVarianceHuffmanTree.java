@@ -61,7 +61,7 @@ public class MinVarianceHuffmanTree {
 				lowestProbNode.isLeaf = true;
 			}
 			if(secondLowestProbNode.symbol != Character.MIN_VALUE) {
-					secondLowestProbNode.isLeaf = true;
+				secondLowestProbNode.isLeaf = true;
 			}
 			par = new Node(Character.MIN_VALUE, nodesProbability);
 			setParent(par, lowestProbNode, secondLowestProbNode);
