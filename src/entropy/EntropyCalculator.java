@@ -1,7 +1,7 @@
 package entropy;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -11,13 +11,14 @@ public class EntropyCalculator {
 
 	
 	private List<Node> symsToProbability;
+	private DecimalFormat df;
 	
 	public EntropyCalculator(List<Node> symsToProbability) {
 		/* make new List of symsToProbability to ensure entropy is calculated correctly in case symsToProbability is modified later,
 		*  specifically in encoding, when making MinVarTree symsToProbability will be modified
 		*/
 		this.symsToProbability = new ArrayList<Node>(symsToProbability);
-		Collections.sort(this.symsToProbability);
+		df = new DecimalFormat("#.###");
 	}
 	
 	public void calculateTheoreticalEntropy() {
@@ -29,7 +30,7 @@ public class EntropyCalculator {
 				theoreticalEntropy += probability * (log2(1 / probability));
 			}
 		}
-		System.out.println("The Theoretical Entropy of the source message based off Shannon's Law is: " + theoreticalEntropy + " bits per symbol");
+		System.out.println("The Theoretical Entropy of the source message based off Shannon's Law is: " + df.format(theoreticalEntropy) + " bits per symbol");
 	}
 	
 	public void calculateCompressedFileEntropy(Map<Character, String> symsToEncoding) {
@@ -41,7 +42,7 @@ public class EntropyCalculator {
 			compressedEntropy += probability * bitLen;
 		}
 		double compressionAsPercentage =  (1 - (compressedEntropy / 8.0)) * 100;
-		System.out.println("The Entropy of the compressed file is: " + compressedEntropy + " bits per symbol or " + compressionAsPercentage + "% compression of the original file");
+		System.out.println("The Entropy of the compressed file is: " + df.format(compressedEntropy) + " bits per symbol or " + df.format(compressionAsPercentage) + "% compression of the original file");
 	}
 	
 	private double log2(double d) {
